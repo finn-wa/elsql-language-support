@@ -1,0 +1,46 @@
+-- Comment
+@NAME(Cols)
+    rowName, kind, val
+
+@NAME(SearchByName)
+    SELECT @INCLUDE(Cols)
+    FROM @VALUE(:foo)
+    WHERE rowName = :rowName
+
+@NAME(Search)
+    SELECT * FROM foo
+    @WHERE
+        @AND(:name)
+            name = :name
+        @IF(:name)
+            @OR(:name)
+                kind = :kind
+
+@NAME(SearchLike)
+    SELECT
+        @INCLUDE(Cols)    
+    FROM foo
+    WHERE 
+        name @LIKE (:name)
+        @AND(:date)
+            date == 1234
+    AND UPPER(type) @LIKE UPPER(:type)
+
+
+@NAME(SearchPaging)
+    @PAGING(:rowOffset, :pageSize)
+        SELECT * FROM foo
+        WHERE name = 'bar'
+        ORDER BY date
+
+@NAME(SearchOffset)
+    SELECT * FROM foo
+    WHERE name = 'bar'
+    ORDER BY date
+    @OFFSETFETCH(:rowOffset,:pageSize)
+
+@NAME(Test1)
+    SELECT * FROM foo WHERE
+    @LOOP(:size)
+        (a = :a@LOOPINDEX AND b = :b@LOOPINDEX)
+        @LOOPJOIN OR
