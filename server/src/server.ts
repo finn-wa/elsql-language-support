@@ -9,11 +9,13 @@ import {
   Position,
   ProposedFeatures,
   Range,
+  TextDocumentPositionParams,
   TextDocuments,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
 import { onCompletion, onCompletionResolve } from './services/completions';
 import { onHover } from './services/hovers';
+import { onSignatureHelp } from './services/signature-help';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -49,6 +51,9 @@ connection.onInitialize((params: InitializeParams) => {
         resolveProvider: true,
       },
       hoverProvider: true,
+      signatureHelpProvider: {
+        triggerCharacters: ['('],
+      },
     },
   };
   if (hasWorkspaceFolderCapability) {
@@ -73,16 +78,28 @@ connection.onInitialized(() => {
   }
 });
 
-// This handler provides the initial list of the completion items.
+/**
+ * Retrieves the contents of the line in the document at the specified position.
+ *
+ * @param params Params containing document URI and position
+ * @returns The line's contents as a string
+ */
+function getLine(params: TextDocumentPositionParams): string {
+  const doc = documents.get(params.textDocument.uri);
+  if (!doc) {
+    throw new Error('Failed to find document with uri ' + params.textDocument.uri);
+  }
+  const lineRange = Range.create(
+    Position.create(params.position.line, 0),
+    Position.create(params.position.line + 1, 0)
+  );
+  return doc.getText(lineRange);
+}
+
 connection.onCompletion(onCompletion);
 connection.onCompletionResolve(onCompletionResolve);
-connection.onHover((params: HoverParams): Hover | null => {
-  const doc = documents.get(params.textDocument.uri);
-  if (doc) {
-    return onHover(doc, params);
-  }
-  return null;
-});
+connection.onHover((params) => onHover(params, getLine(params)));
+connection.onSignatureHelp((params) => onSignatureHelp(params, getLine(params)));
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events

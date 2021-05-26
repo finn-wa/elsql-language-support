@@ -1,16 +1,20 @@
 import { HoverParams } from 'vscode-languageserver-protocol';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Hover, Position, Range } from 'vscode-languageserver-types';
+import { Hover } from 'vscode-languageserver-types';
 import { TagDocs, TagUtils } from '../resources/tags';
 
+const TAG_DOCS = new TagDocs();
 const TAG_PATTERN = new RegExp(/@[A-Z]+/g);
 
-export const onHover = (doc: TextDocument, params: HoverParams): Hover | null => {
+/**
+ * Hover handler
+ *
+ * @param params HoverParams
+ * @param line The line that the cursor is on
+ * @returns A Hover, or null if none found
+ */
+export function onHover(params: HoverParams, line: string): Hover | null {
   const pos = params.position;
-  const lineText = doc.getText(
-    Range.create(Position.create(pos.line, 0), Position.create(pos.line + 1, 0))
-  );
-  for (const match of lineText.matchAll(TAG_PATTERN)) {
+  for (const match of line.matchAll(TAG_PATTERN)) {
     // Break if match start is past hover position
     if (match.index === undefined || match.index > pos.character) {
       break;
@@ -18,9 +22,9 @@ export const onHover = (doc: TextDocument, params: HoverParams): Hover | null =>
     // Return docs if hover position is in match and match is a valid tag
     const matchText = match[0];
     if (match.index + matchText.length > pos.character && TagUtils.isValue(matchText)) {
-      const tagDoc = TagDocs[TagUtils.toName(matchText)];
+      const tagDoc = TAG_DOCS[TagUtils.toName(matchText)];
       return { contents: tagDoc.detail };
     }
   }
   return null;
-};
+}
