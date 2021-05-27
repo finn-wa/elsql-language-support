@@ -1,20 +1,26 @@
 /**@type {import('eslint').Linter.Config} */
-// eslint-disable-next-line no-undef
 module.exports = {
-	root: true,
-	parser: '@typescript-eslint/parser',
-	plugins: [
-		'@typescript-eslint',
-	],
-	extends: [
-		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
-	],
-	rules: {
-		'semi': [2, "always"],
-		'@typescript-eslint/no-unused-vars': 0,
-		'@typescript-eslint/no-explicit-any': 0,
-		'@typescript-eslint/explicit-module-boundary-types': 0,
-		'@typescript-eslint/no-non-null-assertion': 0,
-	}
+  root: true,
+  env: {
+    es2021: true,
+    node: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'prettier',
+  ],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module',
+    tsconfigRootDir: __dirname,
+    project: ['tsconfig.json', 'client/tsconfig.json', 'server/tsconfig.json'],
+  },
+  rules: {
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '_' }],
+  },
 };

@@ -4,4 +4,3 @@ client/out/**
 server/node_modules/**
 server/out/**
 docs
-.eslintrc.js

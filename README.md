@@ -8,7 +8,6 @@ Based on the lsp-sample for VS Code: https://code.visualstudio.com/api/language-
 .
 ├── client // Language Client
 │   ├── src
-│   │   ├── test // End to End tests for Language Client / Server
 │   │   └── extension.ts // Language Client entry point
 ├── package.json // The extension manifest.
 └── server // Language Server

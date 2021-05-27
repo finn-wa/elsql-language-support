@@ -26,6 +26,7 @@ function buildParams(params: ParameterInformation[]): string {
   return params.reduce((acc, param, index) => {
     const i = index + 1;
     const suffix = i === params.length ? ')' : ',';
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     return acc + '${' + i + ':' + param.label + '}' + suffix;
   }, '(');
 }
