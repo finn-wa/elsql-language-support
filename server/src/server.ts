@@ -1,27 +1,26 @@
-import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
   createConnection,
   InitializeParams,
   InitializeResult,
   ProposedFeatures,
-  TextDocuments,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
-import { handleCompletion, handleCompletionResolve } from './handlers/completion';
+import { handleCompletion } from './handlers/completion';
+import { handleDefinition } from './handlers/definition';
 import { handleHover } from './handlers/hover';
 import { handleSignatureHelp } from './handlers/signature-help';
-import { getLine } from './utils/text-document';
+import * as Files from './services/files';
 
 const connection = createConnection(ProposedFeatures.all);
-const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 connection.onInitialize((_params: InitializeParams): InitializeResult => {
   return {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
       completionProvider: {
-        resolveProvider: true,
+        resolveProvider: false,
       },
+      definitionProvider: true,
       hoverProvider: true,
       signatureHelpProvider: {
         triggerCharacters: ['('],
@@ -31,9 +30,9 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
 });
 
 connection.onCompletion(handleCompletion);
-connection.onCompletionResolve(handleCompletionResolve);
-connection.onHover((params) => handleHover(params, getLine(documents, params)));
-connection.onSignatureHelp((params) => handleSignatureHelp(params, getLine(documents, params)));
+connection.onHover((params) => handleHover(params, Files.getLine(params)));
+connection.onSignatureHelp((params) => handleSignatureHelp(params, Files.getLine(params)));
+connection.onDefinition((params) => handleDefinition(params, Files.getDocument(params)));
 
-documents.listen(connection);
+Files.listen(connection);
 connection.listen();
