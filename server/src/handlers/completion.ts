@@ -6,7 +6,7 @@ import {
   InsertTextFormat,
   ParameterInformation,
 } from 'vscode-languageserver-types';
-import { TagDoc, TAG_DOCS } from '../resources/tags';
+import { TagDoc, TAG_DOCS } from '../models/tags';
 
 const TRIGGER_PARAM_HINTS = Command.create(
   'Trigger Parameter Hints',
@@ -55,6 +55,6 @@ const completionItems = Object.values(TAG_DOCS).map((c) => completionItem(c));
  * @param _params Completion params
  * @returns A list of CompletionItems
  */
-export const onCompletion = (_params: CompletionParams): CompletionItem[] => completionItems;
+export const handleCompletion = (_params: CompletionParams): CompletionItem[] => completionItems;
 
-export const onCompletionResolve = (item: CompletionItem): CompletionItem => item;
+export const handleCompletionResolve = (item: CompletionItem): CompletionItem => item;

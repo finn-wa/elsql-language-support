@@ -1,9 +1,7 @@
 import { HoverParams } from 'vscode-languageserver-protocol';
 import { Hover } from 'vscode-languageserver-types';
-import { TagDocs, TagUtils } from '../resources/tags';
-
-const TAG_DOCS = new TagDocs();
-const TAG_PATTERN = new RegExp(/@[A-Z]+/g);
+import { TAG_DOCS } from '../models/tags';
+import * as TagUtils from '../utils/tag';
 
 /**
  * Hover handler
@@ -12,9 +10,9 @@ const TAG_PATTERN = new RegExp(/@[A-Z]+/g);
  * @param line The line that the cursor is on
  * @returns A Hover, or null if none found
  */
-export function onHover(params: HoverParams, line: string): Hover | null {
+export function handleHover(params: HoverParams, line: string): Hover | null {
   const pos = params.position;
-  for (const match of line.matchAll(TAG_PATTERN)) {
+  for (const match of line.matchAll(TagUtils.TAG_PATTERN)) {
     // Break if match start is past hover position
     if (match.index === undefined || match.index > pos.character) {
       break;

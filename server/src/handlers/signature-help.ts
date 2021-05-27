@@ -4,22 +4,28 @@ import {
   SignatureHelpParams,
   SignatureInformation,
 } from 'vscode-languageserver-protocol';
-import { TagDoc, TAG_DOCS } from '../resources/tags';
+import { TagDoc, TAG_DOCS } from '../models/tags';
+import { TAG_PATTERN } from '../utils/tag';
 
-const TAG_PATTERN = new RegExp(/@[A-Z]+/g);
+/**
+ * Converts a TagDoc into a SignatureItem
+ *
+ * @param tag TagDoc
+ * @returns SignatureItem
+ */
+function signatureItem(tag: TagDoc) {
+  return {
+    label: `${tag.label}(${tag.params.map((p) => p.label).join(', ')})`,
+    documentation: tag.detail,
+    parameters: tag.params,
+  };
+}
 
 const signatures = new Map<string, SignatureInformation>(
   Object.values(TAG_DOCS)
     .filter((t: TagDoc) => t.params.length > 0)
     .map((tag: TagDoc) => {
-      return [
-        tag.label,
-        {
-          label: `${tag.label}(${tag.params.map((p) => p.label).join(', ')})`,
-          documentation: tag.detail,
-          parameters: tag.params,
-        },
-      ];
+      return [tag.label, signatureItem(tag)];
     })
 );
 
@@ -44,7 +50,10 @@ function getActiveParam(text: string, params?: ParameterInformation[]): number |
  * @param line Line that the cursor is on
  * @returns SignatureHelp (or null if none found)
  */
-export function onSignatureHelp(params: SignatureHelpParams, line: string): SignatureHelp | null {
+export function handleSignatureHelp(
+  params: SignatureHelpParams,
+  line: string
+): SignatureHelp | null {
   const beforeCursor = line.slice(0, params.position.character);
   const tagMatches = Array.from(beforeCursor.matchAll(TAG_PATTERN));
   if (tagMatches.length === 0) {

@@ -3,13 +3,12 @@
   "description": "Language server for ElSQL",
   "version": "0.1.0",
   "author": "Finn Welsford-Ackroyd",
-  "license": "AGPLv3",
+  "license": "MIT",
   "engines": {
     "node": "*"
   },
   "repository": {
-    "type": "git",
-    "url": "https://github.com/Microsoft/vscode-extension-samples"
+    "url": "https://github.com/finn-wa/elsql-language-support"
   },
   "dependencies": {
     "vscode-languageserver": "^7.0.0",

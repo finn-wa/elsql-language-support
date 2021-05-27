@@ -1,6 +1,7 @@
 import { MarkupContent, MarkupKind, ParameterInformation } from 'vscode-languageserver-types';
 import { DOCS } from './docs';
 import { Params } from './params';
+import * as TagUtils from '../utils/tag';
 
 /**
  * Enum for runtime checking of TagNames
@@ -24,23 +25,9 @@ export enum Tag {
   LOOPINDEX3 = 'LOOPINDEX3',
   LOOPJOIN = 'LOOPJOIN',
 }
+
 export type TagName = keyof typeof Tag;
 export type TagValue = `@${TagName}`;
-
-export namespace TagUtils {
-  export function isName(str: string): str is TagName {
-    return str in Tag;
-  }
-  export function isValue(str: string): str is TagValue {
-    return str.startsWith('@') && str.slice(1) in Tag;
-  }
-  export function toName(value: TagValue): TagName {
-    return value.slice(1) as TagName;
-  }
-  export function toValue(name: TagName): TagValue {
-    return `@${name}` as TagValue;
-  }
-}
 
 export interface TagDoc {
   label: TagValue;
@@ -61,6 +48,7 @@ function tagDoc(tag: TagName, detail: string, ...params: ParameterInformation[])
 }
 
 export type TagDocsType = { [key in TagName]: TagDoc };
+
 export class TagDocs implements TagDocsType {
   readonly INCLUDE = tagDoc(Tag.INCLUDE, 'Include a named block', Params.blockName);
   readonly NAME = tagDoc(Tag.NAME, 'Create a named block', Params.includeBlockName);
