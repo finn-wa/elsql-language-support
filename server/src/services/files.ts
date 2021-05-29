@@ -1,11 +1,15 @@
 import {
   Connection,
-  Position,
   Range,
+  TextDocumentIdentifier,
   TextDocumentPositionParams,
   TextDocuments,
 } from 'vscode-languageserver';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+
+interface TextDocumentParams {
+  textDocument: TextDocumentIdentifier;
+}
 
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
@@ -24,7 +28,7 @@ export function listen(connection: Connection): void {
  * @param uri The URI of the document to fetch
  * @returns
  */
-export function getDocument(params: TextDocumentPositionParams): TextDocument {
+export function getDocument(params: TextDocumentParams): TextDocument {
   const doc = documents.get(params.textDocument.uri);
   if (!doc) {
     throw new Error('Failed to find document with uri ' + params.textDocument.uri);
@@ -40,9 +44,6 @@ export function getDocument(params: TextDocumentPositionParams): TextDocument {
  */
 export function getLine(params: TextDocumentPositionParams): string {
   const doc = getDocument(params);
-  const lineRange = Range.create(
-    Position.create(params.position.line, 0),
-    Position.create(params.position.line + 1, 0)
-  );
+  const lineRange = Range.create(params.position.line, 0, params.position.line + 1, 0);
   return doc.getText(lineRange);
 }

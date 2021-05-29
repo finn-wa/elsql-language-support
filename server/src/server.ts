@@ -7,6 +7,7 @@ import {
 } from 'vscode-languageserver/node';
 import { provideCompletion } from './providers/completion';
 import { provideDefinition } from './providers/definition';
+import { provideDocumentSymbols } from './providers/document-symbol';
 import { provideHover } from './providers/hover';
 import { provideSignatureHelp } from './providers/signature-help';
 import * as Files from './services/files';
@@ -21,6 +22,7 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
         resolveProvider: false,
       },
       definitionProvider: true,
+      documentSymbolProvider: true,
       hoverProvider: true,
       signatureHelpProvider: {
         triggerCharacters: ['('],
@@ -30,9 +32,10 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
 });
 
 connection.onCompletion(provideCompletion);
+connection.onDefinition((params) => provideDefinition(params, Files.getDocument(params)));
+connection.onDocumentSymbol((params) => provideDocumentSymbols(Files.getDocument(params)));
 connection.onHover((params) => provideHover(params, Files.getLine(params)));
 connection.onSignatureHelp((params) => provideSignatureHelp(params, Files.getLine(params)));
-connection.onDefinition((params) => provideDefinition(params, Files.getDocument(params)));
 
 Files.listen(connection);
 connection.listen();
