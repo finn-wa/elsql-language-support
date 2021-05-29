@@ -39,7 +39,7 @@ function findDefinition(blockName: string, doc: TextDocument): Range | null {
  * @param doc
  * @returns
  */
-export function handleDefinition(params: DefinitionParams, doc: TextDocument): Definition | null {
+export function provideDefinition(params: DefinitionParams, doc: TextDocument): Definition | null {
   const line = Files.getLine(params);
   const blockName = parseReference(line, params.position);
   if (blockName === null) {

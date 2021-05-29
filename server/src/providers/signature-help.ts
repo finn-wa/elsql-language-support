@@ -50,7 +50,7 @@ function getActiveParam(text: string, params?: ParameterInformation[]): number |
  * @param line Line that the cursor is on
  * @returns SignatureHelp (or null if none found)
  */
-export function handleSignatureHelp(
+export function provideSignatureHelp(
   params: SignatureHelpParams,
   line: string
 ): SignatureHelp | null {

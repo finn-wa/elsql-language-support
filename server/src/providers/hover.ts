@@ -10,7 +10,7 @@ import * as TagUtils from '../utils/tag';
  * @param line The line that the cursor is on
  * @returns A Hover, or null if none found
  */
-export function handleHover(params: HoverParams, line: string): Hover | null {
+export function provideHover(params: HoverParams, line: string): Hover | null {
   const pos = params.position;
   for (const match of line.matchAll(TagUtils.TAG_PATTERN)) {
     // Break if match start is past hover position

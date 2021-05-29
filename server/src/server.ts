@@ -5,10 +5,10 @@ import {
   ProposedFeatures,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
-import { handleCompletion } from './handlers/completion';
-import { handleDefinition } from './handlers/definition';
-import { handleHover } from './handlers/hover';
-import { handleSignatureHelp } from './handlers/signature-help';
+import { provideCompletion } from './providers/completion';
+import { provideDefinition } from './providers/definition';
+import { provideHover } from './providers/hover';
+import { provideSignatureHelp } from './providers/signature-help';
 import * as Files from './services/files';
 
 const connection = createConnection(ProposedFeatures.all);
@@ -29,10 +29,10 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
   };
 });
 
-connection.onCompletion(handleCompletion);
-connection.onHover((params) => handleHover(params, Files.getLine(params)));
-connection.onSignatureHelp((params) => handleSignatureHelp(params, Files.getLine(params)));
-connection.onDefinition((params) => handleDefinition(params, Files.getDocument(params)));
+connection.onCompletion(provideCompletion);
+connection.onHover((params) => provideHover(params, Files.getLine(params)));
+connection.onSignatureHelp((params) => provideSignatureHelp(params, Files.getLine(params)));
+connection.onDefinition((params) => provideDefinition(params, Files.getDocument(params)));
 
 Files.listen(connection);
 connection.listen();

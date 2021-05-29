@@ -29,9 +29,7 @@
 
 @NAME(SearchPaging)
     @PAGING(:rowOffset, :pageSize)
-        SELECT * FROM foo
-        WHERE name = 'bar'
-        ORDER BY date
+        @INCLUDE(Search)
 
 @NAME(SearchOffset)
     SELECT * FROM foo

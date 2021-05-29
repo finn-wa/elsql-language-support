@@ -56,4 +56,4 @@ const completionItems = Object.values(TAG_DOCS).map((c) => completionItem(c));
  * @param _params Completion params
  * @returns A list of CompletionItems
  */
-export const handleCompletion = (_params: CompletionParams): CompletionItem[] => completionItems;
+export const provideCompletion = (_params: CompletionParams): CompletionItem[] => completionItems;
