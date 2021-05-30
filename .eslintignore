@@ -1,7 +1,8 @@
-node_modules/**
+.eslintrc.js
+build.js
 client/node_modules/**
 client/out/**
+docs
+node_modules/**
 server/node_modules/**
 server/out/**
-docs
-.eslintrc.js

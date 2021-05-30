@@ -17,7 +17,7 @@
   "activationEvents": [
     "onLanguage:elsql"
   ],
-  "main": "./client/out/extension",
+  "main": "./out/client/src/extension.js",
   "contributes": {
     "languages": [
       {
@@ -40,17 +40,19 @@
       }
     ]
   },
-  "icon": "docs/icon/extension-icon.png",
+  "icon": "elsql/extension-icon.png",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "node build.js prod all",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
+    "build": "node build.js",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
   },
   "devDependencies": {
     "@types/node": "12.20.13",
     "@typescript-eslint/eslint-plugin": "4.25.0",
     "@typescript-eslint/parser": "4.25.0",
+    "esbuild": "0.12.5",
     "eslint": "7.27.0",
     "eslint-config-prettier": "8.3.0",
     "prettier": "2.3.0",

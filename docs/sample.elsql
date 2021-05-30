@@ -26,18 +26,6 @@
             date == 1234
     AND UPPER(type) @LIKE UPPER(:type)
 
-
-
-
-
-
-
-
-
-
-    
-
-
 @NAME(SearchPaging)
     @PAGING(:rowOffset, :pageSize)
         @INCLUDE(Search)

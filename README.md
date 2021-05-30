@@ -6,16 +6,16 @@ VS Code language support for [ElSQL](https://github.com/OpenGamma/ElSql), the Ja
 
 ### Syntax highlighting
 
-![Syntax highlighting](docs/media/syntax_highlighting.png)
+![Syntax highlighting](https://github.com/finn-wa/elsql-language-support/raw/main/docs/media/syntax_highlighting.png)
 
 ### View implementation
 
 Go to implementation or hover preview @NAME blocks from @INCLUDE references.
-![View implementation](docs/media/view_implementation.png)
+![View implementation](https://github.com/finn-wa/elsql-language-support/raw/main/docs/media/view_implementation.png)
 
 ### Code completion
 
-![Code completion](docs/media/code_completion.png)
+![Code completion](https://github.com/finn-wa/elsql-language-support/raw/main/docs/media/code_completion.png)
 
 ### More features
 
