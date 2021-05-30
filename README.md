@@ -1,33 +1,55 @@
 # ElSQL Language Support
 
-Based on the lsp-sample for VS Code: https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
+VS Code language support for [ElSQL](https://github.com/OpenGamma/ElSql), the Java SQL DSL.
 
 ## Features
 
-- Code completion proposals
-- Hover information
-- Function signature help
-- Go to implementation (or definition?) for @NAME blocks
-- Preview of @NAME blocks
-- Supply document symbols overview (list of @NAME blocks for easy navigation)
+### Syntax highlighting
+
+![Syntax highlighting](docs/media/syntax_highlighting.png)
+
+### View implementation
+
+Go to implementation or hover preview @NAME blocks from @INCLUDE references.
+![View implementation](docs/media/view_implementation.png)
+
+### Code completion
+
+![Code completion](docs/media/code_completion.png)
+
+### More features
+
 - Rename variables and @NAME blocks
+- Hover for ElSQL tag documentation
+- Document symbols overview
+- Function signature help
 
 ### Coming Soon
 
 - Find all references to variables and @NAME blocks
-- Format document
+- Format blocks
 
 ## Structure
 
-```
+```ini
 .
-├── client // Language Client
-│   ├── src
-│   │   └── extension.ts // Language Client entry point
-├── package.json // The extension manifest.
-└── server // Language Server
+├── client # ElSQL Language Client
+│   └── src
+│       └── extension.ts # Entry point
+│
+├── elsql # ElSQL Language Support
+│   ├── elsql.tmLanguage.json # TextMate grammar
+│	└── language-configuration.json # Editor config
+│
+├── package.json # Extension manifest
+│
+└── server # ElSQL Language Server
     └── src
-        └── server.ts // Language Server entry point
+        ├── models # Language tags, params, and docs
+		├── providers # Language feature providers
+		├── services # Stateful services
+		├── utils # Stateless utilities
+		└── server.ts # Entry point
 ```
 
 ## Launching the LS
