@@ -1,7 +1,7 @@
 {
   "name": "elsql-ls-server",
   "description": "Language server for ElSQL",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "Finn Welsford-Ackroyd",
   "license": "MIT",
   "engines": {
