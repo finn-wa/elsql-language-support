@@ -2,29 +2,19 @@ import { DefinitionParams } from 'vscode-languageserver-protocol';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { DefinitionLink, Position, Range } from 'vscode-languageserver-types';
 import * as Files from '../services/files';
+import { findMatchAtPosition } from '../utils/regex';
 
-const INCLUDE_PATTERN = /(?<=@INCLUDE\()[\w_]+(?=\))/g;
-const NAME_PATTERN = /^@NAME\(([\w_]+)\)/gm;
+const INCLUDE_PATTERN = /(?<=@INCLUDE\()\w+(?=\))/g;
+const NAME_PATTERN = /^@NAME\((\w+)\)/gm;
 
 interface OriginReference {
   blockName: string;
   originSelectionRange: Range;
 }
 
-interface MatchWithIndex extends RegExpMatchArray {
-  length: 1;
-  index: number;
-}
-
 function getOriginReference(line: string, pos: Position): OriginReference | null {
-  const refMatch = Array.from(line.matchAll(INCLUDE_PATTERN)).find(
-    (match): match is MatchWithIndex =>
-      match.length === 1 &&
-      match.index !== undefined &&
-      match.index <= pos.character &&
-      match.index + match[0].length >= pos.character
-  );
-  if (refMatch === undefined) {
+  const refMatch = findMatchAtPosition(line, INCLUDE_PATTERN, pos);
+  if (refMatch === null) {
     return null;
   }
   return {

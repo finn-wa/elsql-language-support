@@ -37,13 +37,21 @@ export function getDocument(params: TextDocumentParams): TextDocument {
 }
 
 /**
+ * Returns a Range for the line that the position is on.
+ *
+ * @param params Params containing a position
+ * @returns The Range
+ */
+export function getLineRange(params: TextDocumentPositionParams): Range {
+  return Range.create(params.position.line, 0, params.position.line + 1, 0);
+}
+
+/**
  * Retrieves the contents of the line in the document at the specified position.
  *
  * @param params Params containing document URI and position
  * @returns The line's contents as a string
  */
 export function getLine(params: TextDocumentPositionParams): string {
-  const doc = getDocument(params);
-  const lineRange = Range.create(params.position.line, 0, params.position.line + 1, 0);
-  return doc.getText(lineRange);
+  return getDocument(params).getText(getLineRange(params));
 }

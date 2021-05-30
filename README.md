@@ -9,12 +9,12 @@ Based on the lsp-sample for VS Code: https://code.visualstudio.com/api/language-
 - Function signature help
 - Go to implementation (or definition?) for @NAME blocks
 - Preview of @NAME blocks
+- Supply document symbols overview (list of @NAME blocks for easy navigation)
+- Rename variables and @NAME blocks
 
 ### Coming Soon
 
 - Find all references to variables and @NAME blocks
-- Rename variables and @NAME blocks
-- Supply document symbols overview (list of @NAME blocks for easy navigation)
 - Format document
 
 ## Structure
