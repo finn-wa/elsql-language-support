@@ -2,7 +2,7 @@
   "name": "elsql-language-support",
   "displayName": "ElSQL Language Support",
   "description": "Language support for the Java SQL DSL https://github.com/OpenGamma/ElSql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "finn-wa",
   "license": "MIT",
   "engines": {

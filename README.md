@@ -34,18 +34,18 @@ Go to implementation or hover preview @NAME blocks from @INCLUDE references.
 ```ini
 .
 ├── client # ElSQL Language Client
-│   └── src
-│       └── extension.ts # Entry point
+│	└── src
+│		└── extension.ts # Entry point
 │
 ├── elsql # ElSQL Language Support
-│   ├── elsql.tmLanguage.json # TextMate grammar
+│	├── elsql.tmLanguage.json # TextMate grammar
 │	└── language-configuration.json # Editor config
 │
 ├── package.json # Extension manifest
 │
 └── server # ElSQL Language Server
-    └── src
-        ├── models # Language tags, params, and docs
+	└── src
+		├── models # Language tags, params, and docs
 		├── providers # Language feature providers
 		├── services # Stateful services
 		├── utils # Stateless utilities
