@@ -17,7 +17,7 @@
   "activationEvents": [
     "onLanguage:elsql"
   ],
-  "main": "./out/client/src/extension.js",
+  "main": "./out/client/src/extension",
   "contributes": {
     "languages": [
       {
@@ -42,10 +42,9 @@
   },
   "icon": "elsql/extension-icon.png",
   "scripts": {
-    "vscode:prepublish": "node build.js prod all",
-    "compile": "tsc -b",
-    "watch": "tsc -b -w",
     "build": "node build.js",
+    "watch": "node build.js dev all",
+    "vscode:prepublish": "node build.js prod all",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
   },
   "devDependencies": {

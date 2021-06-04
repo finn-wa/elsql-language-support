@@ -14,7 +14,7 @@ const baseConfig = {
 const configs = {
   dev: {
     watch: true,
-    sourcemap: 'external',
+    sourcemap: 'inline',
   },
   prod: {
     minify: true,
@@ -26,9 +26,18 @@ const serverEntry = './server/src/server.ts';
 
 /** @type {Record<string,esbuild.BuildOptions>} */
 const targets = {
-  client: { entryPoints: [clientEntry] },
-  server: { entryPoints: [serverEntry] },
-  all: { entryPoints: [serverEntry, clientEntry] },
+  client: {
+    entryPoints: [clientEntry],
+    tsconfig: './client/tsconfig.json',
+  },
+  server: {
+    entryPoints: [serverEntry],
+    tsconfig: './server/tsconfig.json',
+  },
+  all: {
+    entryPoints: [serverEntry, clientEntry],
+    tsconfig: './tsconfig.json',
+  },
 };
 
 const args = process.argv.slice(2);
