@@ -43,8 +43,9 @@
   "icon": "elsql/extension-icon.png",
   "scripts": {
     "build": "node build.js",
-    "watch": "node build.js dev all",
-    "vscode:prepublish": "node build.js prod all",
+    "build:dev": "node build.js dev",
+    "build:prod": "node build.js prod",
+    "vscode:prepublish": "npm run build:prod",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
   },
   "devDependencies": {

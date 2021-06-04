@@ -3,11 +3,13 @@ const esbuild = require('esbuild');
 /** @type {esbuild.BuildOptions} */
 const baseConfig = {
   bundle: true,
-  format: 'cjs',
-  platform: 'node',
+  entryPoints: ['./client/src/extension.ts', './server/src/server.ts'],
   external: ['vscode'],
+  format: 'cjs',
   logLevel: 'info',
   outdir: 'out',
+  platform: 'node',
+  tsconfig: './tsconfig.json',
 };
 
 /** @type {Record<string,esbuild.BuildOptions>} */
@@ -21,40 +23,15 @@ const configs = {
   },
 };
 
-const clientEntry = './client/src/extension.ts';
-const serverEntry = './server/src/server.ts';
-
-/** @type {Record<string,esbuild.BuildOptions>} */
-const targets = {
-  client: {
-    entryPoints: [clientEntry],
-    tsconfig: './client/tsconfig.json',
-  },
-  server: {
-    entryPoints: [serverEntry],
-    tsconfig: './server/tsconfig.json',
-  },
-  all: {
-    entryPoints: [serverEntry, clientEntry],
-    tsconfig: './tsconfig.json',
-  },
-};
-
 const args = process.argv.slice(2);
-if (
-  args.length != 2 ||
-  !Object.keys(configs).includes(args[0]) ||
-  !Object.keys(targets).includes(args[1])
-) {
+if (args.length !== 1 || !Object.keys(configs).includes(args[0])) {
   console.log(`Expected args in the following format:
-node build.js <CONFIG> <TARGET>
+node build.js <CONFIG>
 CONFIG = ${Object.keys(configs).join('|')}
-TARGET = ${Object.keys(targets).join('|')}
 `);
   process.exit(1);
 }
 
 const config = configs[args[0]];
-const target = targets[args[1]];
 
-esbuild.build({ ...baseConfig, ...config, ...target }).catch(() => process.exit(1));
+esbuild.build({ ...baseConfig, ...config }).catch(() => process.exit(1));
