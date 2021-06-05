@@ -2,7 +2,7 @@
   "name": "elsql-language-support",
   "displayName": "ElSQL Language Support",
   "description": "Language support for the Java SQL DSL https://github.com/OpenGamma/ElSql",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "finn-wa",
   "license": "MIT",
   "engines": {
@@ -46,7 +46,8 @@
     "build:dev": "node build.js dev",
     "build:prod": "node build.js prod",
     "vscode:prepublish": "npm run build:prod",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "version:patch": "cd client && npm version patch && cd ../server && npm version patch && cd .. && npm version patch"
   },
   "devDependencies": {
     "@types/node": "12.20.13",

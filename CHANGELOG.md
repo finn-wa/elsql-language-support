@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.0.2]
+
+### Fixed
+
+- Bug where @INCLUDE hover shows the wrong @NAME block
+
 ## [1.0.0] - 2021-05-30
 
 ### Added

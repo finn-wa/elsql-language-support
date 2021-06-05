@@ -3,7 +3,7 @@
   "description": "VSCode client for ElSQL Language Server",
   "author": "Finn Welsford-Ackroyd",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.52.0"
   },
