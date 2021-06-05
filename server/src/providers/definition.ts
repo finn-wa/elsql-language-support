@@ -3,15 +3,22 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { DefinitionLink, Position, Range } from 'vscode-languageserver-types';
 import * as Files from '../services/files';
 import { findMatchAtPosition } from '../utils/regex';
+import { provideDocumentSymbols } from './document-symbol';
 
 const INCLUDE_PATTERN = /(?<=@INCLUDE\()\w+(?=\))/g;
-const NAME_PATTERN = /^@NAME\((\w+)\)/gm;
 
 interface OriginReference {
   blockName: string;
   originSelectionRange: Range;
 }
 
+/**
+ * Finds the @INCLUDE reference under the cursor (if present).
+ *
+ * @param line The contents of the line under the cursor
+ * @param pos The cursor position
+ * @returns The reference, or null if none found
+ */
 function getOriginReference(line: string, pos: Position): OriginReference | null {
   const refMatch = findMatchAtPosition(line, INCLUDE_PATTERN, pos);
   if (refMatch === null) {
@@ -26,33 +33,31 @@ function getOriginReference(line: string, pos: Position): OriginReference | null
   };
 }
 
+/**
+ * Finds the referenced @NAME block in the document.
+ *
+ * @param reference The @INCLUDE reference
+ * @param doc The current document
+ * @returns The DefinitionLink for the block, or null if not found
+ */
 function findDefinitionLink(reference: OriginReference, doc: TextDocument): DefinitionLink | null {
-  const fullText = doc.getText();
-  const regex = new RegExp(NAME_PATTERN);
-  let match: RegExpExecArray | null = null;
-  do {
-    match = regex.exec(fullText);
-    // Stop searching if target definition is found (or if nothing is found)
-  } while (match !== null && match[1] !== reference.blockName);
-  if (match === null) {
-    return null; // Nothing found
+  const symbols = provideDocumentSymbols(doc);
+  const targetIndex = symbols.findIndex((s) => s.name === reference.blockName);
+  if (targetIndex === -1) {
+    return null;
   }
-
-  const targetStart = doc.positionAt(match.index);
-  const targetSelectionRange = Range.create(
-    targetStart,
-    Position.create(targetStart.line, targetStart.character + match[0].length)
-  );
-
-  const nextBlock = NAME_PATTERN.exec(fullText);
-  const blockEndIndex = nextBlock === null ? fullText.length : nextBlock.index - 1;
-  const targetRange = Range.create(targetStart, doc.positionAt(blockEndIndex));
-
+  let targetRangeEnd: Position;
+  if (targetIndex + 1 >= symbols.length) {
+    targetRangeEnd = Position.create(doc.lineCount, 0);
+  } else {
+    const nextSymbolStart = symbols[targetIndex + 1].range.start;
+    targetRangeEnd = Position.create(nextSymbolStart.line - 1, 0);
+  }
   return {
     originSelectionRange: reference.originSelectionRange,
     targetUri: doc.uri,
-    targetRange,
-    targetSelectionRange,
+    targetRange: Range.create(symbols[targetIndex].range.start, targetRangeEnd),
+    targetSelectionRange: symbols[targetIndex].selectionRange,
   };
 }
 
@@ -60,9 +65,9 @@ function findDefinitionLink(reference: OriginReference, doc: TextDocument): Defi
  * Retrieves the definition of the symbol. Conveniently, ElSQL can only
  * reference definitions which are in the current file.
  *
- * @param params
- * @param doc
- * @returns
+ * @param params Definition params
+ * @param doc The current document
+ * @returns The definition link (or null if not applicable/invalid reference)
  */
 export function provideDefinition(
   params: DefinitionParams,
