@@ -3,6 +3,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Tests",
+      "program": "${workspaceFolder}/scripts/test.js",
+      "preLaunchTask": "build:debug",
+      "request": "launch",
+      "type": "node",
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
       "type": "extensionHost",
       "request": "launch",
       "name": "Launch Client",

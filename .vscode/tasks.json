@@ -3,15 +3,31 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "watch",
-      "isBackground": true,
+      "label": "build:watch",
+      "script": "build:watch",
       "group": {
         "kind": "build",
         "isDefault": true
-      },
+      }
+    },
+    {
+      "type": "npm",
+      "label": "test",
+      "script": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "label": "build:debug",
+      "script": "build:debug",
+      "isBackground": false,
+      "group": "build",
       "presentation": {
         "panel": "dedicated",
-        "reveal": "never"
+        "revealProblems": "onProblem"
       }
     }
   ]
