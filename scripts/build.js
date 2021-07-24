@@ -1,18 +1,33 @@
 const { program, Option } = require('commander');
-const { fork } = require('child_process');
+const { fork, ChildProcess } = require('child_process');
 const esbuild = require('esbuild');
 const glob = require('fast-glob');
 const fs = require('fs/promises');
 
+/** @type {ChildProcess} */
+let jasmineProcess = null;
+
 /**
- * Runs jasmine tests. Takes onRebuild args.
+ * Runs jasmine tests.
  *
- * @param {esbuild.BuildFailure} error
- * @param {esbuild.BuildResult} _result
+ * @param {esbuild.BuildResult} result
  */
-function runJasmine(error, _result) {
-  if (!error) {
-    fork(__dirname + '/test');
+function runTestProcess(result) {
+  if (result?.errors?.length > 0) {
+    console.log('[test] skipping tests');
+    return;
+  }
+  jasmineProcess = fork(__dirname + '/test');
+  jasmineProcess.on('exit', () => (jasmineProcess = null));
+}
+
+/**
+ * Kills the child process running the tests.
+ */
+function killTestProcess() {
+  if (jasmineProcess) {
+    console.log('[test] cancelling tests');
+    jasmineProcess.kill('SIGTERM');
   }
 }
 
@@ -28,18 +43,24 @@ function getBuildOptions(args) {
     bundle: true,
     format: 'cjs',
     logLevel: 'info',
+    minify: args.target === 'prod',
     outdir: 'out',
     platform: 'node',
-    tsconfig: './tsconfig.json',
+    plugins: [],
     sourcemap: args.sourcemap ? 'inline' : false,
-    minify: args.target === 'prod',
+    tsconfig: './tsconfig.json',
+    watch: args.watch,
   };
 
   if (args.target === 'test') {
     buildOptions.entryPoints = glob.sync('./server/src/**/*.ts');
-    if (args.watch) {
-      buildOptions.watch = { onRebuild: runJasmine };
-    }
+    buildOptions.plugins.push({
+      name: 'JasmineRunner',
+      setup: (build) => {
+        build.onStart(() => killTestProcess());
+        build.onEnd((res) => runTestProcess(res));
+      },
+    });
   } else {
     buildOptions.entryPoints = ['./client/src/extension.ts', './server/src/server.ts'];
     buildOptions.external = ['vscode'];
@@ -63,7 +84,7 @@ async function build(options) {
  * CLI arguments passed to this program
  * @typedef ProgramArgs
  * @property { 'dev' | 'test' | 'prod'} target build target
- * @property {boolean} watch rebuild on file change.
+ * @property {boolean} watch rebuild on file change
  * @property {boolean} sourcemap produce sourcemaps for debugging
  */
 program

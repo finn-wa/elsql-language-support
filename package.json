@@ -46,10 +46,9 @@
     "build:dev": "node scripts/build.js -t dev",
     "build:prod": "node scripts/build.js -t prod",
     "build:watch": "node scripts/build.js -t dev --watch",
-    "build:debug": "node scripts/build.js -t test --sourcemap",
-    "pretest": "node scripts/build.js -t test",
-    "test": "node scripts/test.js",
+    "test": "node scripts/build.js -t test",
     "test:watch": "node scripts/build.js -t test --watch",
+    "test:debug": "node scripts/build.js -t test --sourcemap",
     "vscode:prepublish": "npm run build:prod",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
     "version:patch": "cd client && npm version patch && cd ../server && npm version patch && cd .. && npm version patch"

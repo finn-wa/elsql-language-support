@@ -21,8 +21,8 @@
     },
     {
       "type": "npm",
-      "label": "build:debug",
-      "script": "build:debug",
+      "label": "test:debug",
+      "script": "test:debug",
       "isBackground": false,
       "group": "build",
       "presentation": {

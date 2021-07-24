@@ -5,7 +5,7 @@
     {
       "name": "Debug Tests",
       "program": "${workspaceFolder}/scripts/test.js",
-      "preLaunchTask": "build:debug",
+      "preLaunchTask": "test:debug",
       "request": "launch",
       "type": "node",
       "skipFiles": ["<node_internals>/**"],
