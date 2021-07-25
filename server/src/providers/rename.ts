@@ -8,6 +8,7 @@ import {
 } from 'vscode-languageserver-protocol';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import * as Files from '../services/files';
+import { lineRange } from '../utils/position';
 import * as RegexUtils from '../utils/regex';
 
 const VAR_PREFIX = /(?<=:)/.source;
@@ -33,8 +34,7 @@ function replaceMatches(doc: TextDocument, regex: RegExp, newName: string): Work
     .filter(RegexUtils.isMatchWithIndex)
     .map((match) => {
       const startPos = doc.positionAt(match.index);
-      const endPos = Position.create(startPos.line, startPos.character + match[0].length);
-      return TextEdit.replace(Range.create(startPos, endPos), newName);
+      return TextEdit.replace(lineRange(startPos, match[0].length), newName);
     });
   const changes: { [uri: string]: TextEdit[] } = {};
   changes[doc.uri] = replacements;

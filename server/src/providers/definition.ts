@@ -2,6 +2,7 @@ import { DefinitionParams } from 'vscode-languageserver-protocol';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { DefinitionLink, Position, Range } from 'vscode-languageserver-types';
 import * as Files from '../services/files';
+import { lineRange } from '../utils/position';
 import { findMatchAtPosition } from '../utils/regex';
 import { provideDocumentSymbols } from './document-symbol';
 
@@ -26,10 +27,7 @@ function getOriginReference(line: string, pos: Position): OriginReference | null
   }
   return {
     blockName: refMatch[0],
-    originSelectionRange: Range.create(
-      Position.create(pos.line, refMatch.index),
-      Position.create(pos.line, refMatch.index + refMatch[0].length)
-    ),
+    originSelectionRange: lineRange(Position.create(pos.line, refMatch.index), refMatch[0].length),
   };
 }
 

@@ -1,6 +1,7 @@
 import { Hover, Position } from 'vscode-languageserver';
 import { Tag, TagName, TAG_DOCS } from '../models/tags';
-import { positionParams, rangeFromPosition } from '../test/test-utils';
+import { positionParams } from '../test/test-utils';
+import { lineRange } from '../utils/position';
 import { provideHover } from './hover';
 
 /**
@@ -27,7 +28,7 @@ describe('Hover Provider', () => {
     expect(hover).withContext('Hover').not.toBeNull();
     expect(hover.range)
       .withContext('Hover range')
-      .toEqual(rangeFromPosition(Position.create(12, 0), 5));
+      .toEqual(lineRange(Position.create(12, 0), 5));
   });
 
   it('should provide a hover at any point in the tag', () => {
@@ -37,7 +38,7 @@ describe('Hover Provider', () => {
     expect(hover.contents).withContext('Hover contents').toEqual(hoverTextForTag('NAME'));
     expect(hover.range)
       .withContext('Hover range')
-      .toEqual(rangeFromPosition(Position.create(0, 0), 5));
+      .toEqual(lineRange(Position.create(0, 0), 5));
   });
 
   it('should not provide a hover for the tag params', () => {
@@ -53,7 +54,7 @@ describe('Hover Provider', () => {
     expect(likeHover.contents).withContext('@LIKE Hover contents').toEqual(hoverTextForTag('LIKE'));
     expect(likeHover.range)
       .withContext('@LIKE Hover range')
-      .toEqual(rangeFromPosition(Position.create(2, 14), 5));
+      .toEqual(lineRange(Position.create(2, 14), 5));
 
     const includeHover = provideHover(positionParams(2, 37), line) as Hover;
     expect(includeHover).withContext('@INCLUDE Hover').not.toBeNull();
@@ -62,7 +63,7 @@ describe('Hover Provider', () => {
       .toEqual(hoverTextForTag('INCLUDE'));
     expect(includeHover.range)
       .withContext('@INCLUDE Hover range')
-      .toEqual(rangeFromPosition(Position.create(2, 33), 8));
+      .toEqual(lineRange(Position.create(2, 33), 8));
   });
 
   it('should not provide a hover when there are no tags', () => {
