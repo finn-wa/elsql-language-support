@@ -20,7 +20,7 @@ the variable equals "bar" ignoring case.`,
   }
   public static get blockName(): ParameterInformation {
     return {
-      label: 'name: string',
+      label: 'name: str',
       documentation: {
         kind: MarkupKind.Markdown,
         value: 'A name for the block. Used in the `@INCLUDE` tag to include this block elsewhere.',
@@ -29,7 +29,7 @@ the variable equals "bar" ignoring case.`,
   }
   public static get includeBlockName(): ParameterInformation {
     return {
-      label: 'name: string',
+      label: 'name: str',
       documentation: {
         kind: MarkupKind.Markdown,
         value: 'The name of the block to include. Can be a literal or a variable.',
@@ -47,7 +47,7 @@ the variable equals "bar" ignoring case.`,
   }
   public static get rowOffset(): ParameterInformation {
     return {
-      label: 'rowOffset: number | string',
+      label: 'rowOffset: int',
       documentation: {
         kind: MarkupKind.PlainText,
         value: 'The number of rows to offset the resultset by.',
@@ -56,7 +56,7 @@ the variable equals "bar" ignoring case.`,
   }
   public static get pageSize(): ParameterInformation {
     return {
-      label: 'pageSize: number | string',
+      label: 'pageSize: int',
       documentation: {
         kind: MarkupKind.PlainText,
         value: 'The max number of results to return.',
@@ -65,7 +65,7 @@ the variable equals "bar" ignoring case.`,
   }
   public static get loopSize(): ParameterInformation {
     return {
-      label: 'loopSize: number | string',
+      label: 'loopSize: int',
       documentation: {
         kind: MarkupKind.PlainText,
         value: 'The number of iterations to run the loop. Can be a literal or a variable.',

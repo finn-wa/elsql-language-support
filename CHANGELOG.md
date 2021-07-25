@@ -6,6 +6,10 @@
 
 - Hover now provides a range
 
+### Changed
+
+- Params in function signature completions are now a little less verbose
+
 ### Fixed
 
 - Bug where hover would show the documentation for @LOOPINDEX when hovering over @LOOPINDEX2 & @LOOPINDEX3
