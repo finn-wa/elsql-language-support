@@ -1,3 +1,4 @@
+import { Range } from 'vscode-languageserver';
 import { HoverParams } from 'vscode-languageserver-protocol';
 import { Hover } from 'vscode-languageserver-types';
 import { TAG_DOCS } from '../models/tags';
@@ -19,9 +20,13 @@ export function provideHover(params: HoverParams, line: string): Hover | null {
     }
     // Return docs if hover position is in match and match is a valid tag
     const matchText = match[0];
-    if (match.index + matchText.length > pos.character && TagUtils.isValue(matchText)) {
+    const matchEndIndex = match.index + matchText.length;
+    if (matchEndIndex > pos.character && TagUtils.isValue(matchText)) {
       const tagDoc = TAG_DOCS[TagUtils.toName(matchText)];
-      return { contents: tagDoc.detail };
+      return {
+        contents: tagDoc.detail,
+        range: Range.create(pos.line, match.index, pos.line, matchEndIndex),
+      };
     }
   }
   return null;

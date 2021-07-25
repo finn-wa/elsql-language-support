@@ -1,0 +1,15 @@
+-- another comment
+@NAME(CommonFields)
+   title, author, content
+
+-- an example comment
+@NAME(SelectBlogs)
+	@PAGING(:paging_offset, :paging_fetch)
+		SELECT @INCLUDE(CommonFields)
+		FROM blogs
+		WHERE id = :id
+			@AND(:date)
+				date > :date
+			@AND(:active)
+				active = :active
+		ORDER BY title, author

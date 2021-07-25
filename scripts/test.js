@@ -10,6 +10,7 @@ const jasmine = new Jasmine();
 jasmine.loadConfig({
   spec_dir: 'out',
   spec_files: ['**/*.spec.js'],
+  failSpecWithNoExpectations: true,
 });
 jasmine.clearReporters();
 jasmine.addReporter(

@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- Hover now provides a range
+
+### Fixed
+
+- Bug where hover would show the documentation for @LOOPINDEX when hovering over @LOOPINDEX2 & @LOOPINDEX3
+
 ## [1.0.2]
 
 ### Fixed

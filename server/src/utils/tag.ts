@@ -1,9 +1,10 @@
 import { Tag, TagName, TagValue } from '../models/tags';
 
 /**
- * Regex which matches a potential tag (@ followed by capital letters)
+ * Regex which matches a potential tag (@ followed by capital letters,
+ * optionally ending with 2 or 3 for LOOPINDEX tags)
  */
-export const TAG_PATTERN = new RegExp(/@[A-Z]+/g);
+export const TAG_PATTERN = new RegExp(/@[A-Z]+[23]?/g);
 
 /**
  * Type assertion for a TagName (tag without @)
