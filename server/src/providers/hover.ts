@@ -1,7 +1,7 @@
 import { Range } from 'vscode-languageserver';
 import { HoverParams } from 'vscode-languageserver-protocol';
 import { Hover } from 'vscode-languageserver-types';
-import { TAG_DOCS } from '../models/tags';
+import { TAG_DOCS } from '../models/tag-docs';
 import * as TagUtils from '../utils/tag';
 
 /**

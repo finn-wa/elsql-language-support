@@ -1,4 +1,4 @@
-import { Tag, TagName, TagValue } from '../models/tags';
+import { Tag, TagName, TagValue } from '../models/tag';
 
 /**
  * Regex which matches a potential tag (@ followed by capital letters,

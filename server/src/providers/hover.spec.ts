@@ -1,5 +1,6 @@
 import { Hover, Position } from 'vscode-languageserver';
-import { Tag, TagName, TAG_DOCS } from '../models/tags';
+import { Tag, TagName } from '../models/tag';
+import { TAG_DOCS } from '../models/tag-docs';
 import { positionParams } from '../test/test-utils';
 import { lineRange } from '../utils/position';
 import { provideHover } from './hover';

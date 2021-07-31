@@ -42,7 +42,10 @@ function getBuildOptions(args) {
   const buildOptions = {
     bundle: true,
     format: 'cjs',
-    loader: { '.elsql': 'text' },
+    loader: {
+      '.elsql': 'text',
+      '.md': 'text',
+    },
     logLevel: 'info',
     minify: args.target === 'prod',
     outdir: 'out',

@@ -6,7 +6,7 @@ import {
   InsertTextFormat,
   ParameterInformation,
 } from 'vscode-languageserver-types';
-import { TagDoc, TAG_DOCS } from '../models/tags';
+import { TagDoc, TAG_DOCS } from '../models/tag-docs';
 
 const TRIGGER_PARAM_HINTS = Command.create(
   'Trigger Parameter Hints',

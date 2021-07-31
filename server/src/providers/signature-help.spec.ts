@@ -1,6 +1,6 @@
 import { SignatureHelp } from 'vscode-languageserver-types';
 import { Params } from '../models/params';
-import { TagDoc, TAG_DOCS } from '../models/tags';
+import { TagDoc, TAG_DOCS } from '../models/tag-docs';
 import { positionParams } from '../test/test-utils';
 import { provideSignatureHelp } from './signature-help';
 

@@ -1,5 +1,5 @@
 client/node_modules/**
-docs
+./docs
 node_modules/**
 out
 server/node_modules/**

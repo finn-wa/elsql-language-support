@@ -1,4 +1,7 @@
 import { Position, Range, TextDocumentPositionParams } from 'vscode-languageserver';
+import { TextDocument } from 'vscode-languageserver-textdocument';
+
+const fakeUri = 'file://path/to/fake/document.elsql';
 
 /**
  * Creates a Position from the specified parameters and nests it in a fake
@@ -10,7 +13,17 @@ import { Position, Range, TextDocumentPositionParams } from 'vscode-languageserv
  */
 export function positionParams(line: number, character: number): TextDocumentPositionParams {
   return {
-    textDocument: { uri: 'file://path/to/fake/document' },
+    textDocument: { uri: fakeUri },
     position: Position.create(line, character),
   };
+}
+
+/**
+ * Creates a new text document.
+ *
+ * @param content The document's content.
+ * @returns The document
+ */
+export function document(content: string): TextDocument {
+  return TextDocument.create(fakeUri, 'elsql', 1, content);
 }

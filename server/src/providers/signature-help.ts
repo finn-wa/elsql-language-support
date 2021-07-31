@@ -4,7 +4,7 @@ import {
   SignatureHelpParams,
   SignatureInformation,
 } from 'vscode-languageserver-protocol';
-import { TagDoc, TAG_DOCS } from '../models/tags';
+import { TagDoc, TAG_DOCS } from '../models/tag-docs';
 import { TAG_PATTERN } from '../utils/tag';
 
 /**
