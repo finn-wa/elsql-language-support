@@ -43,5 +43,5 @@ export function toName(value: TagValue): TagName {
  * @returns TagValue
  */
 export function toValue(name: TagName): TagValue {
-  return `@${name}` as TagValue;
+  return `@${name}`;
 }

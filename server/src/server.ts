@@ -1,17 +1,18 @@
 import {
+  CompletionItem,
   createConnection,
   InitializeParams,
   InitializeResult,
   ProposedFeatures,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
-import { provideCompletion } from './providers/completion';
+import { provideCompletion, resolveCompletion } from './providers/completion/completion';
 import { provideDefinition } from './providers/definition';
 import { provideDocumentSymbols } from './providers/document-symbol';
 import { provideHover } from './providers/hover';
 import { provideRename } from './providers/rename';
 import { provideSignatureHelp } from './providers/signature-help';
-import * as Files from './services/files';
+import { FileService } from './services/files';
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -20,7 +21,8 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Incremental,
       completionProvider: {
-        resolveProvider: false,
+        resolveProvider: true,
+        triggerCharacters: ['@', '('],
       },
       definitionProvider: true,
       documentSymbolProvider: true,
@@ -34,11 +36,12 @@ connection.onInitialize((_params: InitializeParams): InitializeResult => {
 });
 
 connection.onCompletion(provideCompletion);
-connection.onDefinition((params) => provideDefinition(params, Files.getDocument(params)));
-connection.onDocumentSymbol((params) => provideDocumentSymbols(Files.getDocument(params)));
-connection.onHover((params) => provideHover(params, Files.getLine(params)));
-connection.onRenameRequest((params) => provideRename(params, Files.getDocument(params)));
-connection.onSignatureHelp((params) => provideSignatureHelp(params, Files.getLine(params)));
+connection.onCompletionResolve(resolveCompletion);
+connection.onDefinition(provideDefinition);
+connection.onDocumentSymbol(provideDocumentSymbols);
+connection.onHover(provideHover);
+connection.onRenameRequest(provideRename);
+connection.onSignatureHelp(provideSignatureHelp);
 
-Files.listen(connection);
+FileService.startDocumentListener(connection);
 connection.listen();

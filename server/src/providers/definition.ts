@@ -1,10 +1,10 @@
 import { DefinitionParams } from 'vscode-languageserver-protocol';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { DefinitionLink, Position, Range } from 'vscode-languageserver-types';
-import * as Files from '../services/files';
+import { FileService } from '../services/files';
 import { lineRange } from '../utils/position';
 import { findMatchAtPosition } from '../utils/regex';
-import { provideDocumentSymbols } from './document-symbol';
+import { getDocumentSymbols } from './document-symbol';
 
 const INCLUDE_PATTERN = /(?<=@INCLUDE\()\w+(?=\))/g;
 
@@ -39,7 +39,7 @@ function getOriginReference(line: string, pos: Position): OriginReference | null
  * @returns The DefinitionLink for the block, or null if not found
  */
 function findDefinitionLink(reference: OriginReference, doc: TextDocument): DefinitionLink | null {
-  const symbols = provideDocumentSymbols(doc);
+  const symbols = getDocumentSymbols(doc);
   const targetIndex = symbols.findIndex((s) => s.name === reference.blockName);
   if (targetIndex === -1) {
     return null;
@@ -67,14 +67,11 @@ function findDefinitionLink(reference: OriginReference, doc: TextDocument): Defi
  * @param doc The current document
  * @returns The definition link (or null if not applicable/invalid reference)
  */
-export function provideDefinition(
-  params: DefinitionParams,
-  doc: TextDocument
-): DefinitionLink[] | null {
-  const reference = getOriginReference(Files.getLine(params), params.position);
+export function provideDefinition(params: DefinitionParams): DefinitionLink[] | null {
+  const reference = getOriginReference(FileService.getLine(params), params.position);
   if (reference === null) {
     return null;
   }
-  const definitionLink = findDefinitionLink(reference, doc);
+  const definitionLink = findDefinitionLink(reference, FileService.getDocument(params));
   return definitionLink === null ? null : [definitionLink];
 }

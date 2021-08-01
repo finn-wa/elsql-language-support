@@ -1,13 +1,24 @@
 import { SignatureHelp } from 'vscode-languageserver-types';
 import { Params } from '../models/params';
-import { TagDoc, TAG_DOCS } from '../models/tag-docs';
+import { TAG_DOCS } from '../models/tag-docs';
+import { FileService } from '../services/files';
 import { positionParams } from '../test/test-utils';
-import { provideSignatureHelp } from './signature-help';
+import { getSignatureHelp, provideSignatureHelp } from './signature-help';
 
 describe('Signature Help Provider', () => {
+  it('should extract relevant details from params', () => {
+    const line = '    @NAME(';
+    const getLineSpy = spyOn(FileService, 'getLine').and.returnValue(line);
+    const params = positionParams(5, 9);
+    const help = provideSignatureHelp(params);
+    expect(help).withContext('Provided SignatureHelp').not.toBeNull();
+    expect(getLineSpy).toHaveBeenCalledOnceWith(params);
+    expect(help).toEqual(getSignatureHelp(line, 9));
+  });
+
   it('should provide signature help for @NAME', () => {
     const line = '@NAME(';
-    const help = provideSignatureHelp(positionParams(0, 6), line) as SignatureHelp;
+    const help = getSignatureHelp(line, 6) as SignatureHelp;
     expect(help).withContext('Signature help').not.toBeNull();
     expect(help.signatures.length).withContext('Num signatures').toBe(1);
     expect(help.activeParameter).withContext('Active param').toBe(0);
@@ -21,7 +32,7 @@ describe('Signature Help Provider', () => {
 
   it('should provide help for second param', () => {
     const line = '  @PAGING(:paging_offset,';
-    const help = provideSignatureHelp(positionParams(0, 25), line) as SignatureHelp;
+    const help = getSignatureHelp(line, 25) as SignatureHelp;
     expect(help).withContext('Signature help').not.toBeNull();
     expect(help.signatures.length).withContext('Number of signatures').toBe(1);
     expect(help.activeParameter).withContext('Active param').toBe(1);
@@ -31,17 +42,16 @@ describe('Signature Help Provider', () => {
 
   it('should not provide help if the cursor is not at the signature', () => {
     const line = '  @PAGING(:paging_offset,';
-    const help = provideSignatureHelp(positionParams(5, 5), line) as SignatureHelp;
+    const help = getSignatureHelp(line, 5) as SignatureHelp;
     expect(help).withContext('Signature help').toBeNull();
   });
 
   it('should provide help for all tags with params', () => {
     Object.values(TAG_DOCS)
       .filter((t) => t.params.length > 0)
-      .forEach((tagDoc: TagDoc) => {
+      .forEach((tagDoc) => {
         const line = tagDoc.label + '(';
-        const posParams = positionParams(5, line.length - 1);
-        const help = provideSignatureHelp(posParams, line) as SignatureHelp;
+        const help = getSignatureHelp(line, line.length - 1) as SignatureHelp;
         expect(help)
           .withContext(tagDoc.label + ' signature help')
           .not.toBeNull();

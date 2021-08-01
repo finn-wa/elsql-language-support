@@ -5,6 +5,7 @@ import {
   SignatureInformation,
 } from 'vscode-languageserver-protocol';
 import { TagDoc, TAG_DOCS } from '../models/tag-docs';
+import { FileService } from '../services/files';
 import { TAG_PATTERN } from '../utils/tag';
 
 /**
@@ -44,17 +45,14 @@ function getActiveParam(text: string, params?: ParameterInformation[]): number |
 }
 
 /**
- * Signature help handler
+ * Gets signature help.
  *
- * @param params SignatureHelpParams
- * @param line Line that the cursor is on
+ * @param line Contents of the line that the cursor is on
+ * @param charPos Position of the cursor in the line
  * @returns SignatureHelp (or null if none found)
  */
-export function provideSignatureHelp(
-  params: SignatureHelpParams,
-  line: string
-): SignatureHelp | null {
-  const beforeCursor = line.slice(0, params.position.character);
+export function getSignatureHelp(line: string, charPos: number) {
+  const beforeCursor = line.slice(0, charPos);
   const tagMatches = Array.from(beforeCursor.matchAll(TAG_PATTERN));
   if (tagMatches.length === 0) {
     return null;
@@ -65,10 +63,7 @@ export function provideSignatureHelp(
   if (sig === undefined) {
     return null;
   }
-  const afterTrigger = line.slice(
-    (tagMatch.index || 0) + tagMatch[0].length,
-    params.position.character
-  );
+  const afterTrigger = line.slice((tagMatch.index || 0) + tagMatch[0].length, charPos);
   // If tag has been closed, don't suggest anything
   if (afterTrigger.includes(')')) {
     return null;
@@ -78,4 +73,14 @@ export function provideSignatureHelp(
     activeParameter: getActiveParam(afterTrigger, sig.parameters),
     activeSignature: 0,
   };
+}
+
+/**
+ * Signature help handler
+ *
+ * @param params SignatureHelpParams
+ * @returns SignatureHelp (or null if none found)
+ */
+export function provideSignatureHelp(params: SignatureHelpParams): SignatureHelp | null {
+  return getSignatureHelp(FileService.getLine(params), params.position.character);
 }

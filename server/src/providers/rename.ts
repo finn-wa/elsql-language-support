@@ -1,13 +1,11 @@
 import {
-  Position,
-  Range,
   RenameParams,
   ResponseError,
   TextEdit,
   WorkspaceEdit,
 } from 'vscode-languageserver-protocol';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import * as Files from '../services/files';
+import { FileService } from '../services/files';
 import { lineRange } from '../utils/position';
 import * as RegexUtils from '../utils/regex';
 
@@ -64,10 +62,11 @@ function validateNewName(newName: string): void {
  * @param doc The text document referenced by the params
  * @returns WorkspaceEdit or null if not a valid rename
  */
-export function provideRename(params: RenameParams, doc: TextDocument): WorkspaceEdit | null {
+export function provideRename(params: RenameParams): WorkspaceEdit | null {
   const newName = params.newName.trim();
   validateNewName(newName);
-  const line = doc.getText(Files.getLineRange(params));
+  const doc = FileService.getDocument(params);
+  const line = doc.getText(FileService.getLineRange(params));
   const varMatch = RegexUtils.findMatchAtPosition(line, VAR_PATTERN, params.position);
   if (varMatch !== null) {
     const oldNamePattern = new RegExp(VAR_PREFIX + varMatch[0], 'gm');
